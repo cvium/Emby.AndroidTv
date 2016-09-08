@@ -1556,6 +1556,18 @@ public class Utils {
         }
     }
 
+    public static String prepareSmbPath(String rawPath) {
+        if (rawPath == null) return "";
+        String lower = rawPath.toLowerCase();
+        if (!rawPath.contains("://")) {
+            rawPath = rawPath.replace("\\\\",""); // remove UNC prefix if there
+            //prefix with smb
+            rawPath = "smb://Eric:bear1bmw@"+rawPath;
+        }
+
+        return rawPath.replaceAll("\\\\","/");
+    }
+
     private static String convertToHex(byte[] data) {
         StringBuilder buf = new StringBuilder();
         for (byte aData : data) {

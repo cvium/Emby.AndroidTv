@@ -9,20 +9,16 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.support.v17.leanback.app.BackgroundManager;
 
 import java.util.List;
 
-import mediabrowser.apiinteraction.EmptyResponse;
 import mediabrowser.apiinteraction.Response;
-import mediabrowser.model.dlna.DeviceProfile;
 import mediabrowser.model.dlna.PlaybackException;
 import mediabrowser.model.dlna.StreamInfo;
 import mediabrowser.model.dlna.VideoOptions;
 import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.dto.UserItemDataDto;
-import mediabrowser.model.entities.EmptyRequestResult;
 import mediabrowser.model.session.PlayMethod;
 import tv.emby.embyatv.R;
 import tv.emby.embyatv.TvApp;
@@ -213,7 +209,7 @@ public class ExternalPlayerActivity extends Activity {
                 // Just pass the path directly
                 mCurrentStreamInfo = new StreamInfo();
                 mCurrentStreamInfo.setPlayMethod(PlayMethod.DirectPlay);
-                startExternalActivity(preparePath(item.getPath()), item.getContainer() != null ? item.getContainer() : "*");
+                startExternalActivity(Utils.prepareSmbPath(item.getPath()), item.getContainer() != null ? item.getContainer() : "*");
             } else {
                 //Build options for player
                 VideoOptions options = new VideoOptions();
@@ -259,18 +255,6 @@ public class ExternalPlayerActivity extends Activity {
                 });
             }
         }
-    }
-
-    protected String preparePath(String rawPath) {
-        if (rawPath == null) return "";
-        String lower = rawPath.toLowerCase();
-        if (!rawPath.contains("://")) {
-            rawPath = rawPath.replace("\\\\",""); // remove UNC prefix if there
-            //prefix with smb
-            rawPath = "smb://"+rawPath;
-        }
-
-        return rawPath.replaceAll("\\\\","/");
     }
 
     protected void startExternalActivity(String path, String container) {

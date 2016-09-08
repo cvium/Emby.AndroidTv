@@ -531,7 +531,7 @@ public class PlaybackController {
         mSubtitleStreams = response.GetSubtitleProfiles(false, mApplication.getApiClient().getApiUrl(), mApplication.getApiClient().getAccessToken());
 
         mFragment.updateDisplay();
-        String path = response.getMediaUrl();
+        String path = response.getPlayMethod() == PlayMethod.DirectStream && mApplication.getPrefs().getBoolean("pref_send_path_external",false) ? Utils.prepareSmbPath(response.getMediaSource().getPath()) : response.getMediaUrl();
 
         // when using VLC if source is stereo or we're on the Fire platform with AC3 - use most compatible output
         if (!mVideoManager.isNativeMode() && ((isLiveTv && Utils.isFireTv()) || (response.getMediaSource() != null && response.getMediaSource().getDefaultAudioStream() != null && response.getMediaSource().getDefaultAudioStream().getChannels() != null && (response.getMediaSource().getDefaultAudioStream().getChannels() <= 2

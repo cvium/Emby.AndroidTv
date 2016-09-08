@@ -265,7 +265,7 @@ public class VideoManager implements IVLCVout.Callback {
             mSurfaceHolder.setKeepScreenOn(true);
 
             mCurrentMedia = new Media(mLibVLC, Uri.parse(path));
-            mCurrentMedia.parse();
+            //mCurrentMedia.parse();
             mVlcPlayer.setMedia(mCurrentMedia);
 
             mCurrentMedia.release();
@@ -426,28 +426,28 @@ public class VideoManager implements IVLCVout.Callback {
 
             // Create a new media player
             ArrayList<String> options = new ArrayList<>(20);
-            options.add("--network-caching=" + buffer);
-            options.add("--no-audio-time-stretch");
-            options.add("--avcodec-skiploopfilter");
-            options.add("" + 1);
-            options.add("--avcodec-skip-frame");
-            options.add("0");
-            options.add("--avcodec-skip-idct");
-            options.add("0");
-            options.add("--androidwindow-chroma");
-            options.add("RV32");
-            options.add("--audio-resampler");
-            options.add("soxr");
-            options.add("--stats");
+//            options.add("--network-caching=" + buffer);
+//            options.add("--no-audio-time-stretch");
+//            options.add("--avcodec-skiploopfilter");
+//            options.add("" + 1);
+//            options.add("--avcodec-skip-frame");
+//            options.add("0");
+//            options.add("--avcodec-skip-idct");
+//            options.add("0");
+//            options.add("--androidwindow-chroma");
+//            options.add("RV32");
+//            options.add("--audio-resampler");
+//            options.add("soxr");
+//            options.add("--stats");
             if (isInterlaced) {
                 options.add("--video-filter=deinterlace");
                 options.add("--deinterlace-mode=Bob");
             }
 //            options.add("--subsdec-encoding");
 //            options.add("Universal (UTF-8)");
-            options.add("-v");
+            options.add("-vvv");
 
-            mLibVLC = new LibVLC(options);
+            mLibVLC = new LibVLC(TvApp.getApplication(), options);
             TvApp.getApplication().getLogger().Info("Network buffer set to " + buffer);
             LibVLC.setOnNativeCrashListener(new LibVLC.OnNativeCrashListener() {
                 @Override
@@ -720,11 +720,11 @@ public class VideoManager implements IVLCVout.Callback {
 
     }
 
-    @Override
-    public void onHardwareAccelerationError(IVLCVout ivlcVout) {
-        TvApp.getApplication().getLogger().Error("VLC Hardware acceleration error");
-        TvApp.getApplication().getPlaybackController().playerErrorEncountered();
-    }
+//    @Override
+//    public void onHardwareAccelerationError(IVLCVout ivlcVout) {
+//        TvApp.getApplication().getLogger().Error("VLC Hardware acceleration error");
+//        TvApp.getApplication().getPlaybackController().playerErrorEncountered();
+//    }
 
     @Override
     public void onSurfacesCreated(IVLCVout ivlcVout) {
