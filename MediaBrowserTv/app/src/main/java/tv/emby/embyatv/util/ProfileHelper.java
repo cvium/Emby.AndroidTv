@@ -29,7 +29,7 @@ public class ProfileHelper {
 
         profile.setName("Android");
         profile.setMaxStreamingBitrate(20000000);
-        profile.setMaxStaticBitrate(30000000);
+        profile.setMaxStaticBitrate(50000000);
 
         List<TranscodingProfile> transcodingProfiles = new ArrayList<>();
 
@@ -177,17 +177,18 @@ public class ProfileHelper {
     public static void setExoOptions(DeviceProfile profile, boolean isLiveTv, boolean allowDTS) {
         profile.setName("Android-Exo");
 
+
         List<DirectPlayProfile> directPlayProfiles = new ArrayList<>();
         if (!isLiveTv || TvApp.getApplication().directStreamLiveTv()) {
             DirectPlayProfile videoDirectPlayProfile = new DirectPlayProfile();
             videoDirectPlayProfile.setContainer((isLiveTv ? "ts,mpegts," : "") + "m4v,mov,xvid,vob,mkv,wmv,asf,ogm,ogv,mp4,webm");
-            videoDirectPlayProfile.setVideoCodec(Utils.isShield() || Utils.isNexus() ? "h264,hevc,vp8,vp9,mpeg4,mpeg2video" : "h264,vp8,vp9,mpeg4,mpeg2video");
+            videoDirectPlayProfile.setVideoCodec(Utils.isShield() || Utils.isNexus() ? "h264,vc1,hevc,vp8,vp9,mpeg4,mpeg2video" : "h264,vp8,vp9,mpeg4,mpeg2video");
             if (Utils.downMixAudio()) {
                 //compatible audio mode - will need to transcode dts and ac3
                 TvApp.getApplication().getLogger().Info("*** Excluding DTS and AC3 audio from direct play due to compatible audio setting");
                 videoDirectPlayProfile.setAudioCodec("aac,mp3,mp2");
             } else {
-                videoDirectPlayProfile.setAudioCodec("aac,ac3,eac3,aac_latm,mp3,mp2" + (allowDTS ? ",dca,dts" : ""));
+                videoDirectPlayProfile.setAudioCodec("aac,ac3,eac3,aac_latm,mp3,mp2,truehd" + (allowDTS ? ",dca,dts" : ""));
             }
             videoDirectPlayProfile.setType(DlnaProfileType.Video);
             directPlayProfiles.add(videoDirectPlayProfile);

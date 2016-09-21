@@ -12,7 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import com.devbrackets.android.exomedia.EMVideoView;
+
+import com.devbrackets.android.exomedia.listener.OnCompletionListener;
+import com.devbrackets.android.exomedia.listener.OnErrorListener;
+import com.devbrackets.android.exomedia.listener.OnPreparedListener;
+import com.devbrackets.android.exomedia.ui.widget.EMVideoView;
 
 import org.videolan.libvlc.IVLCVout;
 import org.videolan.libvlc.LibVLC;
@@ -610,9 +614,9 @@ public class VideoManager implements IVLCVout.Callback {
     PlaybackListener errorListener;
 
     public void setOnErrorListener(final PlaybackListener listener) {
-        mVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+        mVideoView.setOnErrorListener(new OnErrorListener() {
             @Override
-            public boolean onError(MediaPlayer mp, int what, int extra) {
+            public boolean onError() {
                 TvApp.getApplication().getLogger().Error("***** Got error from player");
                 listener.onEvent();
                 stopProgressLoop();
@@ -629,9 +633,9 @@ public class VideoManager implements IVLCVout.Callback {
     }
 
     public void setOnCompletionListener(final PlaybackListener listener) {
-        mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+        mVideoView.setOnCompletionListener(new OnCompletionListener() {
             @Override
-            public void onCompletion(MediaPlayer mp) {
+            public void onCompletion() {
                 listener.onEvent();
                 stopProgressLoop();
             }
@@ -640,13 +644,10 @@ public class VideoManager implements IVLCVout.Callback {
         mVlcHandler.setOnCompletionListener(listener);
     }
 
-    private MediaPlayer mNativeMediaPlayer;
-
     public void setOnPreparedListener(final PlaybackListener listener) {
-        mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+        mVideoView.setOnPreparedListener(new OnPreparedListener() {
             @Override
-            public void onPrepared(MediaPlayer mp) {
-                mNativeMediaPlayer = mp;
+            public void onPrepared() {
                 listener.onEvent();
                 startProgressLoop();
             }

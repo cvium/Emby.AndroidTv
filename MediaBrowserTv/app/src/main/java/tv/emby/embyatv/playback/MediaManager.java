@@ -14,8 +14,6 @@ import android.text.InputType;
 import android.widget.EditText;
 
 import com.devbrackets.android.exomedia.EMAudioPlayer;
-import com.devbrackets.android.exomedia.event.EMMediaProgressEvent;
-import com.devbrackets.android.exomedia.listener.EMProgressCallback;
 
 import org.videolan.libvlc.LibVLC;
 import org.videolan.libvlc.Media;
@@ -199,25 +197,6 @@ public class MediaManager {
     private static boolean createPlayer(int buffer) {
         try {
 
-            // Create a new media player based on platform
-            if (Utils.is60()) {
-                nativeMode = true;
-                mExoplayer = new EMAudioPlayer(TvApp.getApplication());
-                mExoplayer.setProgressCallback(new EMProgressCallback() {
-                    @Override
-                    public boolean onProgressUpdated(EMMediaProgressEvent progressEvent) {
-                        reportProgress();
-                        return false;
-                    }
-                });
-
-                mExoplayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                    @Override
-                    public void onCompletion(MediaPlayer mp) {
-                        onComplete();
-                    }
-                });
-            } else {
                 ArrayList<String> options = new ArrayList<>(20);
                 options.add("--network-caching=" + buffer);
                 options.add("--no-audio-time-stretch");
@@ -254,8 +233,6 @@ public class MediaManager {
                 });
 
                 mVlcPlayer.setEventListener(mVlcHandler);
-
-            }
 
         } catch (Exception e) {
             TvApp.getApplication().getLogger().ErrorException("Error creating VLC player", e);
